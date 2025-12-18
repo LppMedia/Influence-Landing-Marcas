@@ -292,10 +292,9 @@ export default function ColorBends({
 
   // Handle pointer move tracking on the container element
   useEffect(() => {
-    // Explicitly typing 'node' to resolve the "never" type error in some TS environments
-    const node: HTMLDivElement | null = containerRef.current;
-    if (node) {
-      // Use globalThis.PointerEvent to avoid potential conflicts with React.PointerEvent and ensure native type is used for addEventListener
+    // FIX: Replaced manual type annotation with instanceof check to satisfy TypeScript narrowing rules
+    const node = containerRef.current;
+    if (node instanceof HTMLElement) {
       const handlePointerMove = (e: globalThis.PointerEvent) => {
         const rect = node.getBoundingClientRect();
         const x = ((e.clientX - rect.left) / (rect.width || 1)) * 2 - 1;

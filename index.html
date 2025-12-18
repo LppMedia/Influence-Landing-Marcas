@@ -30,6 +30,8 @@
       body {
         font-family: 'Inter', sans-serif;
         background-color: #0e061e;
+        margin: 0;
+        padding: 0;
       }
       .glass {
         background: rgba(14, 6, 30, 0.4);
@@ -134,9 +136,6 @@
         z-index: 50;
         box-shadow: 0 10px 20px rgba(0,0,0,0.3);
       }
-      .tilted-card-mobile-alert {
-        display: none;
-      }
 
       /* ScrollStack Styles */
       .scroll-stack-scroller {
@@ -175,19 +174,22 @@
   <script type="importmap">
 {
   "imports": {
-    "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-    "react/": "https://esm.sh/react@^19.2.3/",
     "react": "https://esm.sh/react@^19.2.3",
+    "react-dom": "https://esm.sh/react-dom@^19.2.3",
+    "react-dom/client": "https://esm.sh/react-dom@^19.2.3/client",
+    "lucide-react": "https://esm.sh/lucide-react@^0.462.0?external=react",
     "ogl": "https://esm.sh/ogl@0.0.116",
     "three": "https://esm.sh/three@0.170.0",
     "lenis": "https://esm.sh/lenis@1.1.20",
-    "framer-motion": "https://esm.sh/framer-motion@^11.11.10"
+    "framer-motion": "https://esm.sh/framer-motion@^11.11.10?external=react",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "react/": "https://esm.sh/react@^19.2.3/"
   }
 }
 </script>
 </head>
   <body class="text-white antialiased overflow-x-hidden">
     <div id="root"></div>
+    <script type="module" src="./index.tsx"></script>
   </body>
 </html>
