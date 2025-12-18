@@ -1,4 +1,6 @@
 
+"use client";
+
 import { useRef, useEffect } from 'react';
 import { Renderer, Program, Mesh, Triangle, Vec2 } from 'ogl';
 
@@ -92,7 +94,7 @@ export default function DarkVeil({
     if (!parent) return;
 
     const renderer = new Renderer({
-      dpr: Math.min(window.devicePixelRatio, 2),
+      dpr: Math.min(typeof window !== "undefined" ? window.devicePixelRatio : 1, 2),
       canvas
     });
 

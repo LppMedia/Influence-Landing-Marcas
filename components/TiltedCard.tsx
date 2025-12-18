@@ -1,4 +1,6 @@
 
+"use client";
+
 import React, { useRef, useState } from 'react';
 import { motion, useMotionValue, useSpring } from 'framer-motion';
 
@@ -8,7 +10,6 @@ const springValues = {
   mass: 2
 };
 
-// Removed 'key' prop as it is a reserved React prop and should not be explicitly defined in the props interface.
 interface TiltedCardProps {
   children: React.ReactNode;
   captionText?: string;
@@ -19,7 +20,6 @@ interface TiltedCardProps {
   showTooltip?: boolean;
 }
 
-// Fixed: Converted to React.FC to ensure children are correctly inferred by the JSX compiler in App.tsx.
 const TiltedCard: React.FC<TiltedCardProps> = ({
   children,
   captionText = '',

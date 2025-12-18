@@ -1,5 +1,7 @@
 
-import React, { useLayoutEffect, useRef, useCallback, useEffect } from 'react';
+"use client";
+
+import React, { useEffect, useRef, useCallback } from 'react';
 import Lenis from 'lenis';
 
 export const ScrollStackItem: React.FC<{ children: React.ReactNode; itemClassName?: string }> = ({ children, itemClassName = '' }) => (
@@ -56,11 +58,8 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
   };
 
   const updateLayoutCache = useCallback(() => {
-    if (!cardsRef.current.length) return;
+    if (!cardsRef.current.length || typeof window === "undefined") return;
     
-    // Medir posiciones estáticas (sin transformaciones activas)
-    // Para medir correctamente, reseteamos temporalmente las transforms si es necesario,
-    // pero como usamos el offset original antes de las animaciones pesadas, suele bastar.
     cachedOffsets.current = cardsRef.current.map(card => {
       const rect = card.getBoundingClientRect();
       return rect.top + window.scrollY;
@@ -72,18 +71,16 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
     }
   }, []);
 
-  const updateCardTransforms = (scrollTop: number) => {
-    if (!cardsRef.current.length) return;
+  const updateCardTransforms = useCallback((scrollTop: number) => {
+    if (!cardsRef.current.length || typeof window === "undefined") return;
 
     const containerHeight = window.innerHeight;
     const stackPosPx = parsePercentage(stackPosition, containerHeight);
     const scaleEndPosPx = parsePercentage(scaleEndPosition, containerHeight);
     const endElementTop = cachedEndOffset.current;
 
-    // Guardar para evitar cálculos repetidos si el scroll no cambió significativamente
     lastScrollTop.current = scrollTop;
 
-    // Calcular índice superior para blur de forma eficiente
     let topIndex = -1;
     if (blurAmount > 0) {
       for (let j = 0; j < cardsRef.current.length; j++) {
@@ -114,7 +111,6 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
         translateY = pinEnd - pinStart;
       }
 
-      // Aplicar estilos con precisión de sub-pixel para máxima suavidad
       card.style.transform = `translate3d(0, ${translateY}px, 0) scale(${scale})`;
       
       if (blurAmount > 0) {
@@ -122,7 +118,6 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
         card.style.filter = blur > 0 ? `blur(${blur}px)` : 'none';
       }
 
-      // Callback de completado para la última tarjeta
       if (i === cardsRef.current.length - 1) {
         const isDone = scrollTop >= pinStart;
         if (isDone && !stackCompletedRef.current) {
@@ -133,25 +128,24 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
         }
       }
     }
-  };
+  }, [baseScale, blurAmount, itemScale, itemStackDistance, onStackComplete, scaleEndPosition, stackPosition]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
     const cards = Array.from(document.querySelectorAll('.scroll-stack-card')) as HTMLElement[];
     cardsRef.current = cards;
 
-    // Configuración inicial de estilos para GPU
     cards.forEach((card, i) => {
       if (i < cards.length - 1) card.style.marginBottom = `${itemDistance}px`;
       card.style.willChange = 'transform';
       card.style.transformOrigin = 'top center';
       card.style.backfaceVisibility = 'hidden';
-      // Fix: webkitFontSmoothing is a vendor-prefixed property not in standard CSSStyleDeclaration
       (card.style as any).webkitFontSmoothing = 'antialiased';
     });
 
     updateLayoutCache();
 
-    // ResizeObserver para recalcular si el contenido cambia
     const ro = new ResizeObserver(() => {
       updateLayoutCache();
       updateCardTransforms(window.scrollY);
@@ -163,22 +157,21 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
       wheelMultiplier: 1,
-      lerp: 0.1, // Suavizado de interpolación
+      lerp: 0.1,
     });
 
     lenis.on('scroll', (e: any) => {
-      // Usar el valor del evento de Lenis es CRÍTICO para la suavidad
       updateCardTransforms(e.scroll);
     });
 
+    let rafHandle: number;
     const raf = (time: number) => {
       lenis.raf(time);
-      requestAnimationFrame(raf);
+      rafHandle = requestAnimationFrame(raf);
     };
-    requestAnimationFrame(raf);
+    rafHandle = requestAnimationFrame(raf);
     lenisRef.current = lenis;
 
-    // Forzar actualización inicial
     setTimeout(() => {
       updateLayoutCache();
       updateCardTransforms(window.scrollY);
@@ -187,8 +180,9 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
     return () => {
       lenis.destroy();
       ro.disconnect();
+      cancelAnimationFrame(rafHandle);
     };
-  }, [itemDistance, itemScale, itemStackDistance, stackPosition, scaleEndPosition, baseScale, blurAmount, onStackComplete]);
+  }, [itemDistance, updateCardTransforms, updateLayoutCache]);
 
   return (
     <div className={`scroll-stack-scroller ${className}`.trim()} ref={scrollerRef}>

@@ -1,4 +1,6 @@
 
+"use client";
+
 import React, { useState, useEffect, useRef } from 'react';
 import { 
   ArrowRight, 
@@ -130,6 +132,7 @@ const App: React.FC = () => {
             <div className="inline-block mb-4 px-4 py-1.5 glass text-brand-magenta rounded-full text-xs font-bold tracking-widest uppercase border border-brand-magenta/30">
               Influencer Marketing Performance
             </div>
+            {/* Unified heading: removed duplicate occurrence */}
             <h1 className="text-5xl lg:text-8xl font-extrabold text-white leading-[1] mb-8 tracking-tight">
               Marketing con influencers que impulsa <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-purple to-brand-magenta">ventas reales</span>.
             </h1>

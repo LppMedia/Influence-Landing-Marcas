@@ -1,4 +1,6 @@
 
+"use client";
+
 import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 
@@ -180,7 +182,7 @@ export default function ColorBends({
     });
     rendererRef.current = renderer;
     renderer.outputColorSpace = THREE.SRGBColorSpace;
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.setPixelRatio(Math.min(typeof window !== "undefined" ? window.devicePixelRatio : 1, 2));
     renderer.setClearColor(0x000000, transparent ? 0 : 1);
     renderer.domElement.style.width = '100%';
     renderer.domElement.style.height = '100%';
@@ -289,11 +291,12 @@ export default function ColorBends({
   ]);
 
   // Handle pointer move tracking on the container element
-  // Fixed: explicitly typed node to HTMLDivElement to prevent narrowing to 'never' in some TypeScript versions.
   useEffect(() => {
-    const node: HTMLDivElement | null = containerRef.current;
+    // Explicit narrowing to resolve the "never" type error in some TS environments
+    const node = containerRef.current;
     if (node) {
-      const handlePointerMove = (e: PointerEvent) => {
+      // Use globalThis.PointerEvent to avoid potential conflicts with React.PointerEvent and ensure native type is used for addEventListener
+      const handlePointerMove = (e: globalThis.PointerEvent) => {
         const rect = node.getBoundingClientRect();
         const x = ((e.clientX - rect.left) / (rect.width || 1)) * 2 - 1;
         const y = -(((e.clientY - rect.top) / (rect.height || 1)) * 2 - 1);
