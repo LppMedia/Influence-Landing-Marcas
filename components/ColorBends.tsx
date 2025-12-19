@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useEffect, useRef } from 'react';
@@ -292,10 +291,11 @@ export default function ColorBends({
 
   // Handle pointer move tracking on the container element
   useEffect(() => {
-    // FIX: Replaced manual type annotation with instanceof check to satisfy TypeScript narrowing rules
-    const node = containerRef.current;
-    if (node instanceof HTMLElement) {
-      const handlePointerMove = (e: globalThis.PointerEvent) => {
+    // FIX: Using explicit casting to HTMLElement | null to avoid 'never' type narrowing issue 
+    // that sometimes occurs in complex component logic or specific TS environments.
+    const node = containerRef.current as HTMLElement | null;
+    if (node) {
+      const handlePointerMove = (e: PointerEvent) => {
         const rect = node.getBoundingClientRect();
         const x = ((e.clientX - rect.left) / (rect.width || 1)) * 2 - 1;
         const y = -(((e.clientY - rect.top) / (rect.height || 1)) * 2 - 1);
