@@ -111,7 +111,8 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
         translateY = pinEnd - pinStart;
       }
 
-      card.style.transform = `translate3d(0, ${translateY}px, 0) scale(${scale})`;
+      // Usar translate3d para forzar aceleración por hardware y Math.round para evitar jitter en mobile
+      card.style.transform = `translate3d(0, ${Math.round(translateY)}px, 0) scale(${scale.toFixed(4)})`;
       
       if (blurAmount > 0) {
         const blur = i < topIndex ? Math.max(0, (topIndex - i) * blurAmount) : 0;
@@ -138,7 +139,7 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
 
     cards.forEach((card, i) => {
       if (i < cards.length - 1) card.style.marginBottom = `${itemDistance}px`;
-      card.style.willChange = 'transform';
+      card.style.willChange = 'transform, filter';
       card.style.transformOrigin = 'top center';
       card.style.backfaceVisibility = 'hidden';
       (card.style as any).webkitFontSmoothing = 'antialiased';
@@ -152,12 +153,15 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
     });
     cards.forEach(c => ro.observe(c));
 
+    // Configuración optimizada para Mobile y Desktop
     const lenis = new Lenis({
-      duration: 1.2,
+      duration: 1.4,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
       wheelMultiplier: 1,
-      lerp: 0.1,
+      touchMultiplier: 2.5, // Más inercia en mobile
+      lerp: 0.08, // Un poco más bajo para mayor suavidad
+      syncTouch: true // Sincroniza el scroll táctil para evitar saltos
     });
 
     lenis.on('scroll', (e: any) => {
@@ -172,12 +176,14 @@ const ScrollStack: React.FC<ScrollStackProps> = ({
     rafHandle = requestAnimationFrame(raf);
     lenisRef.current = lenis;
 
-    setTimeout(() => {
+    // Timeout inicial para asegurar que el DOM esté listo
+    const timer = setTimeout(() => {
       updateLayoutCache();
       updateCardTransforms(window.scrollY);
-    }, 100);
+    }, 150);
 
     return () => {
+      clearTimeout(timer);
       lenis.destroy();
       ro.disconnect();
       cancelAnimationFrame(rafHandle);

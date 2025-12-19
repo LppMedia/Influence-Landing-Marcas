@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useEffect, useRef } from 'react';
@@ -291,9 +292,8 @@ export default function ColorBends({
 
   // Handle pointer move tracking on the container element
   useEffect(() => {
-    // FIX: Using explicit casting to HTMLElement | null to avoid 'never' type narrowing issue 
-    // that sometimes occurs in complex component logic or specific TS environments.
-    const node = containerRef.current as HTMLElement | null;
+    // FIX: Using direct ref access and local variable to avoid potential 'never' type inference issues.
+    const node = containerRef.current;
     if (node) {
       const handlePointerMove = (e: PointerEvent) => {
         const rect = node.getBoundingClientRect();
@@ -302,9 +302,9 @@ export default function ColorBends({
         pointerTargetRef.current.set(x, y);
       };
 
-      node.addEventListener('pointermove', handlePointerMove as EventListener);
+      node.addEventListener('pointermove', handlePointerMove);
       return () => {
-        node.removeEventListener('pointermove', handlePointerMove as EventListener);
+        node.removeEventListener('pointermove', handlePointerMove);
       };
     }
   }, []);
