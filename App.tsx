@@ -29,7 +29,6 @@ import TiltedCard from './components/TiltedCard';
 const BOOKING_URL = "https://api.leadconnectorhq.com/widget/booking/hMkdMnrM8W8Oyn24jf2B";
 
 const TRUST_BRANDS = [
-  { name: 'Cyzone', icon: 'solar:magic-stick-3-bold-duotone', label: 'CYZONE' },
   { name: 'Warner Music', icon: 'simple-icons:warnermusicgroup', label: 'WARNER MUSIC' },
   { name: 'Boy Wonder', icon: 'solar:crown-minimalistic-bold-duotone', label: 'BOY WONDER' },
   { name: 'Dryworld', icon: 'solar:fire-bold-duotone', label: 'DRYWORLD' },
@@ -119,14 +118,14 @@ const App: React.FC = () => {
             href={BOOKING_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="btn-shiny bg-gradient-to-r from-brand-purple to-brand-magenta text-white px-7 py-3 rounded-full text-sm font-black hover:brightness-110 transition-all shadow-[0_0_20px_rgba(208,24,253,0.3)] hover:shadow-[0_0_30px_rgba(208,24,253,0.5)] active:scale-95 flex items-center justify-center min-w-[180px]"
+            className="btn-shiny bg-gradient-to-r from-brand-purple to-brand-magenta text-white px-7 py-3 rounded-full text-sm font-black hover:brightness-110 transition-all shadow-[0_0_20px_rgba(208,24,253,0.3)] hover:shadow-[0_0_30px_rgba(208,24,253,0.5)] active:scale-95 flex items-center justify-center min-w-[200px] text-center"
           >
             Agendar Demostración
           </a>
         </div>
       </nav>
 
-      <section className="relative pt-40 pb-20 lg:pt-56 lg:pb-32 overflow-hidden">
+      <section className="relative pt-40 pb-20 lg:pt-56 lg:pb-32 overflow-hidden min-h-[90vh] flex items-center">
         <ColorBends 
           colors={['#0e061e', '#a11cc4', '#d018fd', '#5a12a5']}
           speed={0.1}
@@ -137,7 +136,7 @@ const App: React.FC = () => {
           transparent={true}
         />
         
-        <div className="max-w-7xl mx-auto px-6 relative z-10">
+        <div className="max-w-7xl mx-auto px-6 relative z-10 w-full">
           <div className="max-w-4xl mx-auto text-center">
             <div className="inline-block mb-4 px-4 py-1.5 glass text-brand-magenta rounded-full text-xs font-bold tracking-widest uppercase border border-brand-magenta/30">
               Influencer Marketing Performance
