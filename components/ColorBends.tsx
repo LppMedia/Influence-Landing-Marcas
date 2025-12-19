@@ -184,16 +184,23 @@ export default function ColorBends({
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.setPixelRatio(Math.min(typeof window !== "undefined" ? window.devicePixelRatio : 1, 2));
     renderer.setClearColor(0x000000, transparent ? 0 : 1);
+    
+    // Garantizar que el canvas ocupe todo el espacio
     renderer.domElement.style.width = '100%';
     renderer.domElement.style.height = '100%';
     renderer.domElement.style.display = 'block';
+    renderer.domElement.style.position = 'absolute';
+    renderer.domElement.style.top = '0';
+    renderer.domElement.style.left = '0';
     container.appendChild(renderer.domElement);
 
     const clock = new THREE.Clock();
 
     const handleResize = () => {
-      const w = container.clientWidth || 1;
-      const h = container.clientHeight || 1;
+      // Usar getBoundingClientRect para mayor precisión en layouts dinámicos
+      const rect = container.getBoundingClientRect();
+      const w = rect.width || window.innerWidth;
+      const h = rect.height || window.innerHeight;
       renderer.setSize(w, h, false);
       material.uniforms.uCanvas.value.set(w, h);
     };
@@ -201,12 +208,17 @@ export default function ColorBends({
     handleResize();
 
     if ('ResizeObserver' in window) {
-      const ro = new ResizeObserver(handleResize);
+      const ro = new ResizeObserver(() => {
+        handleResize();
+      });
       ro.observe(container);
       resizeObserverRef.current = ro;
-    } else {
-      window.addEventListener('resize', handleResize);
     }
+
+    window.addEventListener('resize', handleResize);
+    
+    // Re-check después de un breve momento para asegurar que el DOM esté listo
+    const safetyTimer = setTimeout(handleResize, 500);
 
     const loop = () => {
       const dt = clock.getDelta();
@@ -230,9 +242,10 @@ export default function ColorBends({
     rafRef.current = requestAnimationFrame(loop);
 
     return () => {
+      clearTimeout(safetyTimer);
       if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
       if (resizeObserverRef.current) resizeObserverRef.current.disconnect();
-      else window.removeEventListener('resize', handleResize);
+      window.removeEventListener('resize', handleResize);
       geometry.dispose();
       material.dispose();
       renderer.dispose();
@@ -290,9 +303,7 @@ export default function ColorBends({
     transparent
   ]);
 
-  // Handle pointer move tracking on the container element
   useEffect(() => {
-    // FIX: Using direct ref access and local variable to avoid potential 'never' type inference issues.
     const node = containerRef.current;
     if (node) {
       const handlePointerMove = (e: PointerEvent) => {

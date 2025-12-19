@@ -95,7 +95,8 @@ export default function DarkVeil({
 
     const renderer = new Renderer({
       dpr: Math.min(typeof window !== "undefined" ? window.devicePixelRatio : 1, 2),
-      canvas
+      canvas,
+      alpha: true
     });
 
     const gl = renderer.gl;
@@ -118,14 +119,22 @@ export default function DarkVeil({
     const mesh = new Mesh(gl, { geometry, program });
 
     const resize = () => {
-      const w = parent.clientWidth,
-        h = parent.clientHeight;
+      // Usar window como referencia si el padre no tiene dimensiones
+      const w = window.innerWidth;
+      const h = window.innerHeight;
       renderer.setSize(w * resolutionScale, h * resolutionScale);
       program.uniforms.uResolution.value.set(w * resolutionScale, h * resolutionScale);
+      
+      // Forzar estilos del canvas
+      canvas.style.width = '100vw';
+      canvas.style.height = '100vh';
     };
 
     window.addEventListener('resize', resize);
     resize();
+    
+    // Check de seguridad
+    const timer = setTimeout(resize, 500);
 
     const start = performance.now();
     let frame = 0;
@@ -144,6 +153,7 @@ export default function DarkVeil({
     loop();
 
     return () => {
+      clearTimeout(timer);
       cancelAnimationFrame(frame);
       window.removeEventListener('resize', resize);
     };
