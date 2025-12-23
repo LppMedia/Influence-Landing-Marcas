@@ -24,8 +24,6 @@ import CurvedLoop from './components/CurvedLoop';
 import ScrollStack, { ScrollStackItem } from './components/ScrollStack';
 import TiltedCard from './components/TiltedCard';
 
-// Fix for JSX element 'iconify-icon' not recognized by TypeScript
-// We extend both global JSX and React.JSX to ensure compatibility across different compiler settings
 declare global {
   namespace JSX {
     interface IntrinsicElements {
@@ -275,9 +273,7 @@ const App: React.FC = () => {
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {VALUE_PROPS.map((prop, idx) => (
               <TiltedCard key={idx} captionText={prop.title} rotateAmplitude={14} scaleOnHover={1.1}>
-                <div 
-                  className="glass p-8 rounded-2xl border border-white/10 shadow-sm h-full flex flex-col group cursor-pointer"
-                >
+                <div className="glass p-8 rounded-2xl border border-white/10 shadow-sm h-full flex flex-col group cursor-pointer">
                   <div className="w-12 h-12 bg-brand-magenta/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-brand-magenta transition-colors">
                     <div className="group-hover:text-white transition-colors">
                       {prop.icon}
@@ -351,7 +347,6 @@ const App: React.FC = () => {
                     </div>
                     <h3 className="text-4xl lg:text-5xl font-bold text-white mb-6 tracking-tight">{step.title}</h3>
                     <p className="text-xl text-slate-500 leading-relaxed max-w-2xl">{step.description}</p>
-                    
                     <div className="mt-12 flex items-center gap-4">
                       <div className="h-[1px] w-12 bg-brand-magenta/50"></div>
                       <span className="text-xs font-bold uppercase tracking-widest text-slate-600">Etapa de ejecución</span>
@@ -371,16 +366,10 @@ const App: React.FC = () => {
               <h2 className="text-3xl lg:text-4xl font-bold text-white mb-4">Resultados que hablan por sí solos</h2>
               <p className="text-slate-500">Marcas que escalaron su facturación mediante nuestra red de creadores.</p>
             </div>
-            <a 
-              href={BOOKING_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-brand-magenta font-bold flex items-center gap-2 hover:gap-4 transition-all whitespace-nowrap"
-            >
+            <a href={BOOKING_URL} target="_blank" rel="noopener noreferrer" className="text-brand-magenta font-bold flex items-center gap-2 hover:gap-4 transition-all whitespace-nowrap">
               Solicitar casos completos <ArrowRight className="w-5 h-5" />
             </a>
           </div>
-
           <div className="grid lg:grid-cols-3 gap-8">
             {CASE_STUDIES.map((study, idx) => (
               <div key={idx} className="group glass rounded-2xl overflow-hidden border border-white/10 shadow-sm hover:shadow-brand-magenta/10 transition-all">
@@ -413,7 +402,6 @@ const App: React.FC = () => {
             <h2 className="text-3xl lg:text-4xl font-bold text-white mb-4">Qué dicen nuestros clientes</h2>
             <p className="text-slate-500 max-w-2xl mx-auto">LPP es el socio de crecimiento para marcas DTC y SaaS.</p>
           </div>
-          
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {TESTIMONIALS.map((t, idx) => (
               <div key={idx} className="glass p-8 rounded-2xl hover:bg-white/5 transition-all border border-white/5">
@@ -437,13 +425,9 @@ const App: React.FC = () => {
             <h2 className="text-3xl lg:text-4xl font-bold text-white mb-4">Inversión Flexible</h2>
             <p className="text-slate-500 max-w-2xl mx-auto">Planes adaptados al tamaño y ambición de tu marca.</p>
           </div>
-
           <div className="grid lg:grid-cols-3 gap-8">
             {PLANS.map((plan, idx) => (
-              <div 
-                key={idx} 
-                className={`relative glass p-10 rounded-3xl border transition-all ${plan.popular ? 'border-brand-magenta shadow-2xl scale-105 z-10' : 'border-white/5 shadow-sm'}`}
-              >
+              <div key={idx} className={`relative glass p-10 rounded-3xl border transition-all ${plan.popular ? 'border-brand-magenta shadow-2xl scale-105 z-10' : 'border-white/5 shadow-sm'}`}>
                 {plan.popular && (
                   <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-brand-magenta text-white px-4 py-1 rounded-full text-xs font-bold uppercase">
                     Más popular
@@ -459,12 +443,7 @@ const App: React.FC = () => {
                     </li>
                   ))}
                 </ul>
-                <a 
-                  href={BOOKING_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={`w-full py-4 rounded-xl font-bold transition-all text-center block ${plan.popular ? 'bg-brand-magenta text-white hover:bg-brand-magenta/80 shadow-lg shadow-brand-magenta/20' : 'glass-light text-white hover:bg-white/10'}`}
-                >
+                <a href={BOOKING_URL} target="_blank" rel="noopener noreferrer" className={`w-full py-4 rounded-xl font-bold transition-all text-center block ${plan.popular ? 'bg-brand-magenta text-white hover:bg-brand-magenta/80 shadow-lg shadow-brand-magenta/20' : 'glass-light text-white hover:bg-white/10'}`}>
                   Hablar con ventas
                 </a>
               </div>
@@ -479,14 +458,10 @@ const App: React.FC = () => {
             <h2 className="text-3xl lg:text-4xl font-bold text-white mb-4">Preguntas Frecuentes</h2>
             <p className="text-slate-500">Todo lo que necesitas saber antes de empezar.</p>
           </div>
-
           <div className="space-y-4">
             {FAQ_ITEMS.map((item, idx) => (
               <div key={idx} className="glass rounded-2xl overflow-hidden transition-all border border-white/5">
-                <button 
-                  onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
-                  className="w-full px-8 py-6 flex items-center justify-between text-left hover:bg-white/5 transition-colors"
-                >
+                <button onClick={() => setOpenFaq(openFaq === idx ? null : idx)} className="w-full px-8 py-6 flex items-center justify-between text-left hover:bg-white/5 transition-colors">
                   <span className="font-bold text-white">{item.question}</span>
                   {openFaq === idx ? <Minus className="w-5 h-5 text-brand-magenta" /> : <Plus className="w-5 h-5 text-slate-700" />}
                 </button>
@@ -511,12 +486,7 @@ const App: React.FC = () => {
               <p className="text-xl text-slate-500 mb-12 max-w-2xl mx-auto">
                 Abrimos cupos limitados cada mes para mantener la excelencia en performance y calidad para cada partner.
               </p>
-              <a 
-                href={BOOKING_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-brand-magenta text-white px-10 py-5 rounded-full font-bold text-xl hover:bg-brand-magenta/80 transition-all shadow-2xl shadow-brand-magenta/40 active:scale-95 flex items-center justify-center gap-3 mx-auto inline-flex"
-              >
+              <a href={BOOKING_URL} target="_blank" rel="noopener noreferrer" className="bg-brand-magenta text-white px-10 py-5 rounded-full font-bold text-xl hover:bg-brand-magenta/80 transition-all shadow-2xl shadow-brand-magenta/40 active:scale-95 flex items-center justify-center gap-3 mx-auto inline-flex">
                 Agendar mi demostración ahora
                 <ArrowRight className="w-6 h-6" />
               </a>
@@ -539,7 +509,6 @@ const App: React.FC = () => {
                 La agencia de influencer marketing líder enfocada 100% en ROI para marcas modernas.
               </p>
             </div>
-            
             <div>
               <h5 className="font-bold text-white mb-6">Compañía</h5>
               <ul className="space-y-4 text-sm text-slate-600">
@@ -549,7 +518,6 @@ const App: React.FC = () => {
                 <li><a href="#" className="hover:text-brand-magenta transition-colors">Contacto</a></li>
               </ul>
             </div>
-
             <div>
               <h5 className="font-bold text-white mb-6">Legal</h5>
               <ul className="space-y-4 text-sm text-slate-600">
@@ -558,7 +526,6 @@ const App: React.FC = () => {
                 <li><a href="#" className="hover:text-brand-magenta transition-colors">Cookies</a></li>
               </ul>
             </div>
-
             <div>
               <h5 className="font-bold text-white mb-6">Conecta</h5>
               <div className="flex gap-4 mb-6">
@@ -581,7 +548,6 @@ const App: React.FC = () => {
               </div>
             </div>
           </div>
-          
           <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-700 font-bold tracking-widest uppercase">
             <span>© 2025 LPP Media Influence. Todos los derechos reservados.</span>
             <div className="flex items-center gap-2">
