@@ -523,6 +523,73 @@ const App: React.FC = () => {
             </div>
           </div>
         </div>
+      </section>
+
+      <footer className="py-20 border-t border-white/5 bg-brand-dark/80 backdrop-blur-lg">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+            <div className="lg:col-span-1">
+              <div className="flex items-center gap-2 mb-6">
+                <iconify-icon icon="solar:globus-bold-duotone" class="text-2xl text-brand-magenta"></iconify-icon>
+                <div className="text-xl font-extrabold tracking-tighter text-white">
+                  LPP MEDIA <span className="text-brand-magenta">INFLUENCE</span>
+                </div>
+              </div>
+              <p className="text-slate-600 text-sm leading-relaxed">
+                La agencia de influencer marketing líder enfocada 100% en ROI para marcas modernas.
+              </p>
+            </div>
+            
+            <div>
+              <h5 className="font-bold text-white mb-6">Compañía</h5>
+              <ul className="space-y-4 text-sm text-slate-600">
+                <li><a href="#" className="hover:text-brand-magenta transition-colors">Nosotros</a></li>
+                <li><a href="#" className="hover:text-brand-magenta transition-colors">Blog</a></li>
+                <li><a href="#" className="hover:text-brand-magenta transition-colors">Carreras</a></li>
+                <li><a href="#" className="hover:text-brand-magenta transition-colors">Contacto</a></li>
+              </ul>
+            </div>
+
+            <div>
+              <h5 className="font-bold text-white mb-6">Legal</h5>
+              <ul className="space-y-4 text-sm text-slate-600">
+                <li><a href="#" className="hover:text-brand-magenta transition-colors">Privacidad</a></li>
+                <li><a href="#" className="hover:text-brand-magenta transition-colors">Términos</a></li>
+                <li><a href="#" className="hover:text-brand-magenta transition-colors">Cookies</a></li>
+              </ul>
+            </div>
+
+            <div>
+              <h5 className="font-bold text-white mb-6">Conecta</h5>
+              <div className="flex gap-4 mb-6">
+                <a href="https://www.instagram.com/lpp.media/" target="_blank" rel="noopener noreferrer" className="p-2 glass rounded-lg text-slate-500 hover:text-brand-magenta transition-colors shadow-sm flex items-center justify-center">
+                  <iconify-icon icon="simple-icons:instagram" class="text-xl"></iconify-icon>
+                </a>
+                <a href="https://www.tiktok.com/@lpp.media" target="_blank" rel="noopener noreferrer" className="p-2 glass rounded-lg text-slate-500 hover:text-brand-magenta transition-colors shadow-sm flex items-center justify-center">
+                  <iconify-icon icon="simple-icons:tiktok" class="text-xl"></iconify-icon>
+                </a>
+                <a href="https://www.linkedin.com/company/lpp-media-influence/posts/?feedView=all" target="_blank" rel="noopener noreferrer" className="p-2 glass rounded-lg text-slate-500 hover:text-brand-magenta transition-colors shadow-sm flex items-center justify-center">
+                  <iconify-icon icon="simple-icons:linkedin" class="text-xl"></iconify-icon>
+                </a>
+                <a href="https://www.youtube.com/@LppMedia" target="_blank" rel="noopener noreferrer" className="p-2 glass rounded-lg text-slate-500 hover:text-brand-magenta transition-colors shadow-sm flex items-center justify-center">
+                  <iconify-icon icon="simple-icons:youtube" class="text-xl"></iconify-icon>
+                </a>
+              </div>
+              <div className="flex items-center gap-3 text-sm text-slate-600">
+                <Mail className="w-4 h-4 text-brand-magenta" />
+                <span>info@lppmediainfluence.com</span>
+              </div>
+            </div>
+          </div>
+          
+          <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-700 font-bold tracking-widest uppercase">
+            <span>© 2025 LPP Media Influence. Todos los derechos reservados.</span>
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 bg-brand-magenta rounded-full animate-pulse"></div>
+              <span className="text-slate-700">Sistemas operativos y listos para escalar</span>
+            </div>
+          </div>
+        </div>
       </footer>
 
       <LeadModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
