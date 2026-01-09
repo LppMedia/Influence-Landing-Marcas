@@ -211,17 +211,17 @@ const App: React.FC = () => {
         </div>
       </section>
 
-      {/* Proceso Section - ScrollStack optimizado */}
+      {/* Proceso Section - Optimizada con IntersectionObserver */}
       <section id="porque" className="py-32">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-24">
             <h2 className="text-4xl lg:text-6xl font-bold text-white mb-4">Nuestro Proceso</h2>
             <p className="text-slate-500 text-lg">Estructura militar para resultados creativos.</p>
           </div>
-          <ScrollStack itemDistance={isMobile ? 180 : 350}>
+          <ScrollStack itemDistance={isMobile ? 40 : 100}>
             {PROCESS_STEPS.map((step, idx) => (
               <ScrollStackItem key={idx} itemClassName="max-w-4xl mx-auto w-full">
-                <div className="w-full glass p-10 lg:p-20 rounded-[2.5rem] border-white/5 shadow-2xl relative overflow-hidden">
+                <div className="w-full glass p-10 lg:p-20 rounded-[2.5rem] border-white/5 shadow-2xl relative overflow-hidden transform hover:scale-[1.01] transition-transform duration-500">
                   <div className="absolute top-6 right-10"><span className="text-6xl lg:text-8xl font-black text-white/5">0{idx + 1}</span></div>
                   <h3 className="text-3xl lg:text-4xl font-bold text-white mb-6">{step.title}</h3>
                   <p className="text-lg lg:text-xl text-slate-500 leading-relaxed">{step.description}</p>

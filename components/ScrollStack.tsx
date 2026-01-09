@@ -1,129 +1,100 @@
 "use client";
 
-import React, { useEffect, useRef, useCallback } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
-export const ScrollStackItem: React.FC<{ children: React.ReactNode; itemClassName?: string }> = ({ children, itemClassName = '' }) => (
-  <div className={`scroll-stack-card ${itemClassName}`.trim()}>{children}</div>
-);
+// --- Lightweight Hook for Intersection Observer ---
+const useInView = (options: IntersectionObserverInit) => {
+  const ref = useRef<HTMLDivElement>(null);
+  const [isInView, setIsInView] = useState(false);
+
+  useEffect(() => {
+    const element = ref.current;
+    if (!element) return;
+
+    const observer = new IntersectionObserver(([entry]) => {
+      // Trigger only once when it enters
+      if (entry.isIntersecting) {
+        setIsInView(true);
+        observer.disconnect();
+      }
+    }, options);
+
+    observer.observe(element);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [options]);
+
+  return { ref, isInView };
+};
+
+interface ScrollStackItemProps {
+  children: React.ReactNode;
+  itemClassName?: string;
+  index?: number;
+}
+
+// --- Optimized Item Component ---
+export const ScrollStackItem: React.FC<ScrollStackItemProps> = ({ 
+  children, 
+  itemClassName = '',
+  index = 0
+}) => {
+  // Threshold 0.1 means trigger when 10% of item is visible
+  const { ref, isInView } = useInView({ threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
+
+  return (
+    <div
+      ref={ref}
+      className={`scroll-stack-card transition-all duration-1000 ease-out ${itemClassName}`.trim()}
+      style={{
+        // Hardware acceleration hints
+        willChange: 'transform, opacity',
+        // Animation logic
+        opacity: isInView ? 1 : 0,
+        transform: isInView 
+          ? 'translate3d(0, 0, 0)' // GPU Idle
+          : 'translate3d(0, 40px, 0)' // Slide up from 40px down
+      }}
+    >
+      {children}
+    </div>
+  );
+};
 
 interface ScrollStackProps {
   children: React.ReactNode;
   className?: string;
   itemDistance?: number;
+  // Deprecated props kept for compatibility but ignored to ensure performance
   itemScale?: number;
   itemStackDistance?: number;
-  stackPosition?: string | number;
-  scaleEndPosition?: string | number;
+  stackPosition?: any;
+  scaleEndPosition?: any;
   baseScale?: number;
   blurAmount?: number;
 }
 
+// --- Container Component ---
 const ScrollStack: React.FC<ScrollStackProps> = ({
   children,
   className = '',
-  itemDistance = 150,
-  itemScale = 0.02,
-  itemStackDistance = 16,
-  stackPosition = '10%',
-  scaleEndPosition = '2%',
-  baseScale = 0.95,
-  blurAmount = 0
+  itemDistance = 100, // Default margin
 }) => {
-  const cardsRef = useRef<HTMLElement[]>([]);
-  const cachedOffsets = useRef<number[]>([]);
-  const cachedEndOffset = useRef<number>(0);
-
-  const calculateProgress = (val: number, start: number, end: number) => {
-    return Math.max(0, Math.min(1, (val - start) / (end - start)));
-  };
-
-  const parsePercentage = (value: string | number, containerHeight: number) => {
-    if (typeof value === 'string' && value.includes('%')) {
-      return (parseFloat(value) / 100) * containerHeight;
-    }
-    return parseFloat(value as string);
-  };
-
-  const updateTransforms = useCallback(() => {
-    if (!cardsRef.current.length) return;
-    
-    const scrollTop = window.scrollY;
-    const containerHeight = window.innerHeight;
-    const stackPosPx = parsePercentage(stackPosition, containerHeight);
-    const scaleEndPosPx = parsePercentage(scaleEndPosition, containerHeight);
-    const endElementTop = cachedEndOffset.current;
-
-    for (let i = 0; i < cardsRef.current.length; i++) {
-      const card = cardsRef.current[i];
-      if (!card) continue;
-
-      const cardTop = cachedOffsets.current[i];
-      const pinStart = cardTop - stackPosPx - itemStackDistance * i;
-      const pinEnd = endElementTop - containerHeight / 1.5;
-
-      const triggerStart = pinStart;
-      const triggerEnd = cardTop - scaleEndPosPx;
-      const scaleProgress = calculateProgress(scrollTop, triggerStart, triggerEnd);
-      const targetScale = baseScale + i * itemScale;
-      const scale = 1 - scaleProgress * (1 - targetScale);
-      
-      let translateY = 0;
-      if (scrollTop >= pinStart && scrollTop <= pinEnd) {
-        translateY = scrollTop - pinStart;
-      } else if (scrollTop > pinEnd) {
-        translateY = pinEnd - pinStart;
-      }
-
-      card.style.transform = `translate3d(0, ${Math.floor(translateY)}px, 0) scale(${scale.toFixed(4)})`;
-      
-      if (blurAmount > 0) {
-        // Optimización: Solo aplicar blur a los que realmente quedan atrás
-        const isPast = scrollTop > pinStart + 100;
-        card.style.filter = isPast ? `blur(${blurAmount}px)` : 'none';
-      }
-    }
-  }, [baseScale, blurAmount, itemScale, itemStackDistance, scaleEndPosition, stackPosition]);
-
-  useEffect(() => {
-    const cards = Array.from(document.querySelectorAll('.scroll-stack-card')) as HTMLElement[];
-    cardsRef.current = cards;
-
-    cards.forEach((card, i) => {
-      if (i < cards.length - 1) card.style.marginBottom = `${itemDistance}px`;
-      card.style.willChange = 'transform';
-      card.style.transformOrigin = 'top center';
-    });
-
-    const updateCache = () => {
-      cachedOffsets.current = cards.map(card => {
-        const rect = card.getBoundingClientRect();
-        return rect.top + window.scrollY;
-      });
-      const endElement = document.querySelector('.scroll-stack-end');
-      if (endElement) {
-        cachedEndOffset.current = endElement.getBoundingClientRect().top + window.scrollY;
-      }
-    };
-
-    updateCache();
-    window.addEventListener('scroll', updateTransforms, { passive: true });
-    window.addEventListener('resize', () => { updateCache(); updateTransforms(); });
-
-    // Initial run
-    updateTransforms();
-
-    return () => {
-      window.removeEventListener('scroll', updateTransforms);
-      window.removeEventListener('resize', updateCache);
-    };
-  }, [itemDistance, updateTransforms]);
-
   return (
-    <div className={`scroll-stack-scroller ${className}`.trim()}>
-      <div className="scroll-stack-inner relative">
-        {children}
-        <div className="scroll-stack-end h-[40vh]" />
-      </div>
+    <div className={`scroll-stack-container w-full flex flex-col ${className}`.trim()}>
+      {React.Children.map(children, (child, index) => {
+        if (React.isValidElement(child)) {
+          return (
+            <div style={{ marginBottom: index === React.Children.count(children) - 1 ? 0 : itemDistance }}>
+              {/* Clone to pass index if needed, though mostly handled by wrapper */}
+              {React.cloneElement(child as React.ReactElement<any>, { index })}
+            </div>
+          );
+        }
+        return child;
+      })}
     </div>
   );
 };
