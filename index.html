@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es" class="scroll-smooth">
+<html lang="es">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -24,7 +24,7 @@
     <script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <script>
       tailwind.config = {
         theme: {
@@ -42,113 +42,54 @@
       }
     </script>
     <style>
+      :root {
+        --brand-magenta: #d018fd;
+      }
       body {
         font-family: 'Inter', sans-serif;
         background-color: #05010a;
+        color: white;
         margin: 0;
         padding: 0;
-        width: 100%;
-        min-height: 100vh;
         overflow-x: hidden;
-      }
-      .glass {
-        background: rgba(255, 255, 255, 0.03);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-      }
-      .glass-light {
-        background: rgba(255, 255, 255, 0.02);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.05);
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-rendering: optimizeLegibility;
       }
       
-      .curved-loop-jacket {
-        width: 100%;
-        overflow: hidden;
-        position: relative;
-        user-select: none;
-        background: transparent;
-        z-index: 10;
-        margin-top: -1rem;
-        margin-bottom: -1rem;
-        pointer-events: auto;
-      }
-      .curved-loop-svg {
-        width: 100%;
+      /* Lenis Scroll Smooth Fixes */
+      html.lenis {
         height: auto;
-        overflow: visible;
-        display: block;
       }
+      .lenis.lenis-smooth {
+        scroll-behavior: auto;
+      }
+      .lenis.lenis-smooth [data-lenis-prevent] {
+        overscroll-behavior: contain;
+      }
+      .lenis.lenis-stopped {
+        overflow: hidden;
+      }
+
+      .glass {
+        background: rgba(5, 1, 10, 0.7);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      }
+      
       .marquee-text-style {
         fill: white;
-        font-size: 72px;
+        font-size: 64px;
         letter-spacing: -0.02em;
         text-transform: uppercase;
         font-weight: 900;
-        pointer-events: none;
-        will-change: transform;
-      }
-
-      .tilted-card-figure {
-        position: relative;
-        perspective: 1000px;
-        margin: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-      .tilted-card-inner {
-        position: relative;
-        transform-style: preserve-3d;
-        width: 100%;
-        height: 100%;
-      }
-      .tilted-card-caption {
-        position: absolute;
-        top: 0;
-        left: 0;
-        pointer-events: none;
-        white-space: nowrap;
-        background: white;
-        color: #05010a;
-        padding: 4px 10px;
-        border-radius: 6px;
-        font-size: 11px;
-        font-weight: 800;
-        text-transform: uppercase;
-        z-index: 50;
-        box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-      }
-
-      .scroll-stack-scroller {
-        width: 100%;
-        position: relative;
-      }
-      .scroll-stack-inner {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-      }
-      .scroll-stack-card {
-        width: 100%;
-        position: relative;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 1;
-      }
-      .scroll-stack-end {
-        height: 50vh;
-        width: 100%;
+        opacity: 0.1;
       }
 
       @keyframes shine-streak {
-        0% { left: -100%; }
-        15% { left: 100%; }
-        100% { left: 100%; }
+        0% { transform: translateX(-100%) rotate(25deg); }
+        20%, 100% { transform: translateX(200%) rotate(25deg); }
       }
       .btn-shiny {
         position: relative;
@@ -158,83 +99,43 @@
         content: '';
         position: absolute;
         top: -50%;
-        left: -100%;
-        width: 60%;
+        left: 0;
+        width: 40%;
         height: 200%;
-        background: linear-gradient(
-          to right,
-          rgba(255, 255, 255, 0) 0%,
-          rgba(255, 255, 255, 0.4) 50%,
-          rgba(255, 255, 255, 0) 100%
-        );
-        transform: rotate(25deg);
+        background: linear-gradient(to right, transparent, rgba(255,255,255,0.3), transparent);
         animation: shine-streak 4s infinite ease-in-out;
-        pointer-events: none;
       }
 
-      @media (max-width: 768px) {
-        .marquee-text-style {
-          font-size: 36px;
-        }
-        .curved-loop-jacket {
-          margin-top: 0;
-          margin-bottom: 0;
-        }
+      /* Brillos de fondo optimizados */
+      .bg-glow {
+        position: fixed;
+        width: 60vw;
+        height: 60vw;
+        background: radial-gradient(circle, rgba(208, 24, 253, 0.08) 0%, transparent 70%);
+        filter: blur(80px);
+        pointer-events: none;
+        z-index: -1;
       }
     </style>
-  <script type="importmap">
+<script type="importmap">
 {
   "imports": {
+    "react/": "https://esm.sh/react@^19.2.3/",
     "react": "https://esm.sh/react@^19.2.3",
-    "react-dom": "https://esm.sh/react-dom@^19.2.3",
-    "react-dom/client": "https://esm.sh/react-dom@^19.2.3/client",
-    "lucide-react": "https://esm.sh/lucide-react@^0.462.0?external=react",
-    "ogl": "https://esm.sh/ogl@0.0.116",
-    "three": "https://esm.sh/three@0.170.0",
-    "lenis": "https://esm.sh/lenis@1.1.20",
-    "framer-motion": "https://esm.sh/framer-motion@^11.11.10?external=react",
     "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-    "react/": "https://esm.sh/react@^19.2.3/"
+    "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
+    "framer-motion": "https://esm.sh/framer-motion@^12.23.26",
+    "three": "https://esm.sh/three@^0.182.0",
+    "lenis": "https://esm.sh/lenis@^1.3.17",
+    "ogl": "https://esm.sh/ogl@^1.0.11"
   }
 }
 </script>
 </head>
-  <body class="text-white antialiased overflow-x-hidden bg-brand-dark">
-    <!-- Meta Pixel Code (Noscript) -->
-    <noscript><img height="1" width="1" style="display:none"
-    src="https://www.facebook.com/tr?id=881687934538760&ev=PageView&noscript=1"
-    /></noscript>
-    <!-- End Meta Pixel Code (Noscript) -->
-
-    <!-- Fondo con efecto de brillo rosado difuminado -->
-    <div class="fixed top-0 left-0 w-full h-full -z-20 pointer-events-none overflow-hidden">
-      <!-- Brillo principal en la esquina superior derecha -->
-      <div 
-        style="
-          position: absolute;
-          top: -10%;
-          right: -10%;
-          width: 70vw;
-          height: 70vw;
-          background: radial-gradient(circle, rgba(208, 24, 253, 0.15) 0%, rgba(208, 24, 253, 0) 70%);
-          filter: blur(120px);
-          border-radius: 50%;
-        "
-      ></div>
-      <!-- Brillo secundario sutil en la parte inferior -->
-      <div 
-        style="
-          position: absolute;
-          bottom: -20%;
-          left: -10%;
-          width: 60vw;
-          height: 60vw;
-          background: radial-gradient(circle, rgba(90, 18, 165, 0.1) 0%, rgba(90, 18, 165, 0) 70%);
-          filter: blur(100px);
-          border-radius: 50%;
-        "
-      ></div>
-    </div>
+  <body class="antialiased">
+    <!-- Glows de fondo -->
+    <div class="bg-glow top-[-10%] right-[-10%]"></div>
+    <div class="bg-glow bottom-[-10%] left-[-10%]" style="background: radial-gradient(circle, rgba(90, 18, 165, 0.05) 0%, transparent 70%);"></div>
 
     <div id="root"></div>
     <script type="module" src="./index.tsx"></script>
