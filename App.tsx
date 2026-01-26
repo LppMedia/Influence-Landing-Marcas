@@ -24,6 +24,8 @@ import LeadModal from './components/LeadModal';
 import CurvedLoop from './components/CurvedLoop';
 import ScrollStack, { ScrollStackItem } from './components/ScrollStack';
 import TiltedCard from './components/TiltedCard';
+import PrivacyPolicy from './components/PrivacyPolicy';
+import TermsConditions from './components/TermsConditions';
 
 // Fix: Removed global JSX shadowing that caused 'Property div does not exist' errors across all files.
 // Using a constant for the web component tag instead to maintain type safety and avoid global scope pollution.
@@ -40,6 +42,22 @@ const TRUST_BRANDS = [
 ];
 
 const App: React.FC = () => {
+  // Simple Router Logic
+  const [currentPath, setCurrentPath] = useState('/');
+
+  useEffect(() => {
+    setCurrentPath(window.location.pathname);
+  }, []);
+
+  if (currentPath === '/privacy') {
+    return <PrivacyPolicy />;
+  }
+
+  if (currentPath === '/terms') {
+    return <TermsConditions />;
+  }
+
+  // --- Landing Page Logic ---
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
@@ -273,7 +291,11 @@ const App: React.FC = () => {
             <IconifyIcon icon="solar:globus-bold-duotone" class="text-2xl text-brand-magenta"></IconifyIcon>
             <div className="text-xl font-extrabold text-white">LPP MEDIA <span className="text-brand-magenta">INFLUENCE</span></div>
           </div>
-          <p className="text-slate-700 text-xs font-bold uppercase tracking-widest">© 2025 LPP Media Influence. Made for ROI.</p>
+          <div className="flex justify-center gap-8 mb-6 text-sm text-slate-400 font-medium">
+            <a href="/privacy" className="hover:text-brand-magenta transition-colors">Política de Privacidad</a>
+            <a href="/terms" className="hover:text-brand-magenta transition-colors">Términos y Condiciones</a>
+          </div>
+          <p className="text-slate-700 text-xs font-bold uppercase tracking-widest">© 2026 LPP Media Influence. Made for ROI.</p>
         </div>
       </footer>
 
