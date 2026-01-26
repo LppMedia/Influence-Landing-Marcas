@@ -289,6 +289,7 @@ const App: React.FC = () => {
             <div className="text-xl font-extrabold text-white">LPP MEDIA <span className="text-brand-magenta">INFLUENCE</span></div>
           </div>
           <div className="flex justify-center gap-8 mb-6 text-sm text-slate-400 font-medium">
+            {/* IMPORTANT: Hash routing used to ensure compatibility with GoHighLevel/Static servers */}
             <a href="#privacy" className="hover:text-brand-magenta transition-colors">Política de Privacidad</a>
             <a href="#terms" className="hover:text-brand-magenta transition-colors">Términos y Condiciones</a>
           </div>

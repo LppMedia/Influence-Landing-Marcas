@@ -21,7 +21,8 @@ const PrivacyPolicy: React.FC = () => {
             <IconifyIcon icon="solar:globus-bold-duotone" class="text-2xl text-brand-magenta"></IconifyIcon>
             <span className="font-bold text-white tracking-tight">LPP MEDIA</span>
           </div>
-          <a href="#" className="text-sm font-semibold hover:text-brand-magenta transition-colors flex items-center gap-2 text-white">
+          {/* Volver al home limpiando el hash */}
+          <a href="/" className="text-sm font-semibold hover:text-brand-magenta transition-colors flex items-center gap-2 text-white">
             <ArrowLeft className="w-4 h-4" /> Volver al Inicio
           </a>
         </div>
