@@ -4,21 +4,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import Lenis from 'lenis';
 import { 
   ArrowRight, 
-  Check, 
-  Plus, 
-  Minus,
-  Mail,
-  X,
-  CheckCircle2,
   Video
 } from 'lucide-react';
 import { 
   VALUE_PROPS, 
   PROCESS_STEPS, 
-  CASE_STUDIES, 
-  TESTIMONIALS, 
-  PLANS, 
-  FAQ_ITEMS 
+  CASE_STUDIES
 } from './constants';
 import LeadModal from './components/LeadModal';
 import CurvedLoop from './components/CurvedLoop';
@@ -27,8 +18,7 @@ import TiltedCard from './components/TiltedCard';
 import PrivacyPolicy from './components/PrivacyPolicy';
 import TermsConditions from './components/TermsConditions';
 
-// Fix: Removed global JSX shadowing that caused 'Property div does not exist' errors across all files.
-// Using a constant for the web component tag instead to maintain type safety and avoid global scope pollution.
+// Fix: Removed global JSX shadowing.
 const IconifyIcon = 'iconify-icon' as any;
 
 const BOOKING_URL = "https://api.leadconnectorhq.com/widget/booking/hMkdMnrM8W8Oyn24jf2B";
@@ -42,35 +32,48 @@ const TRUST_BRANDS = [
 ];
 
 const App: React.FC = () => {
-  // Simple Router Logic (Hash based to avoid server 404s)
-  const [currentHash, setCurrentHash] = useState('');
+  // Enhanced Router Logic: Supports both Path (url/privacy) and Hash (url/#privacy)
+  // This handles the user visiting the specific URL or clicking the footer links.
+  const [currentRoute, setCurrentRoute] = useState('home');
 
   useEffect(() => {
-    // Set initial hash
-    setCurrentHash(window.location.hash);
+    const checkRoute = () => {
+      const path = window.location.pathname;
+      const hash = window.location.hash;
 
-    // Listen for hash changes
-    const handleHashChange = () => {
-      setCurrentHash(window.location.hash);
-      window.scrollTo(0, 0);
+      if (path === '/privacy' || hash === '#privacy') {
+        setCurrentRoute('privacy');
+      } else if (path === '/terms' || hash === '#terms') {
+        setCurrentRoute('terms');
+      } else {
+        setCurrentRoute('home');
+      }
     };
 
-    window.addEventListener('hashchange', handleHashChange);
-    return () => window.removeEventListener('hashchange', handleHashChange);
+    // Check on load
+    checkRoute();
+
+    // Listen for changes
+    window.addEventListener('popstate', checkRoute);
+    window.addEventListener('hashchange', checkRoute);
+
+    return () => {
+      window.removeEventListener('popstate', checkRoute);
+      window.removeEventListener('hashchange', checkRoute);
+    };
   }, []);
 
-  if (currentHash === '#privacy') {
+  if (currentRoute === 'privacy') {
     return <PrivacyPolicy />;
   }
 
-  if (currentHash === '#terms') {
+  if (currentRoute === 'terms') {
     return <TermsConditions />;
   }
 
   // --- Landing Page Logic ---
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [isMobile, setIsMobile] = useState(false);
   const [counts, setCounts] = useState({ creators: 0, campaigns: 0, time: 0 });
   const statsRef = useRef<HTMLDivElement>(null);
@@ -81,18 +84,10 @@ const App: React.FC = () => {
 
     // 1. Inicializar Lenis Global
     const lenis = new Lenis({
-      // OPTIMIZACIÓN MÓVIL (Option A):
-      // Usar duration: 0 en móviles desactiva la interpolación y usa el scroll nativo.
-      // Esto elimina la sensación de "lag" o pesadez.
       duration: isMobileDevice ? 0 : 1.2,
-      
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
-      
-      // OPTIMIZACIÓN DE SENSIBILIDAD:
-      // Reducido de 2 a 0.8 en móviles para evitar que la página "vuele" con un toque suave.
       touchMultiplier: isMobileDevice ? 0.8 : 1, 
-      
       infinite: false,
     });
 
@@ -143,7 +138,7 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen relative bg-brand-dark overflow-x-hidden">
-      {/* Navegación - Optimizada con Backdrop Blur solo si es necesario */}
+      {/* Navegación */}
       <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'glass py-3' : 'bg-transparent py-6'}`}>
         <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
           <div className="flex items-center gap-2 group cursor-pointer">
@@ -239,7 +234,7 @@ const App: React.FC = () => {
         </div>
       </section>
 
-      {/* Proceso Section - Optimizada con IntersectionObserver */}
+      {/* Proceso Section */}
       <section id="porque" className="py-32">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-24">
@@ -283,7 +278,7 @@ const App: React.FC = () => {
         </div>
       </section>
 
-      {/* CTA y Footer Simplificados para velocidad */}
+      {/* CTA y Footer */}
       <section className="py-24">
         <div className="max-w-4xl mx-auto px-6 text-center">
           <div className="glass p-12 lg:p-20 rounded-[3rem] border-white/5">
@@ -302,8 +297,8 @@ const App: React.FC = () => {
             <div className="text-xl font-extrabold text-white">LPP MEDIA <span className="text-brand-magenta">INFLUENCE</span></div>
           </div>
           <div className="flex justify-center gap-8 mb-6 text-sm text-slate-400 font-medium">
-            <a href="#privacy" className="hover:text-brand-magenta transition-colors">Política de Privacidad</a>
-            <a href="#terms" className="hover:text-brand-magenta transition-colors">Términos y Condiciones</a>
+            <a href="/#privacy" className="hover:text-brand-magenta transition-colors">Política de Privacidad</a>
+            <a href="/#terms" className="hover:text-brand-magenta transition-colors">Términos y Condiciones</a>
           </div>
           <p className="text-slate-700 text-xs font-bold uppercase tracking-widest">© 2026 LPP Media Influence. Made for ROI.</p>
         </div>
