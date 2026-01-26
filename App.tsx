@@ -42,18 +42,28 @@ const TRUST_BRANDS = [
 ];
 
 const App: React.FC = () => {
-  // Simple Router Logic
-  const [currentPath, setCurrentPath] = useState('/');
+  // Simple Router Logic (Hash based to avoid server 404s)
+  const [currentHash, setCurrentHash] = useState('');
 
   useEffect(() => {
-    setCurrentPath(window.location.pathname);
+    // Set initial hash
+    setCurrentHash(window.location.hash);
+
+    // Listen for hash changes
+    const handleHashChange = () => {
+      setCurrentHash(window.location.hash);
+      window.scrollTo(0, 0);
+    };
+
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
 
-  if (currentPath === '/privacy') {
+  if (currentHash === '#privacy') {
     return <PrivacyPolicy />;
   }
 
-  if (currentPath === '/terms') {
+  if (currentHash === '#terms') {
     return <TermsConditions />;
   }
 
@@ -292,8 +302,8 @@ const App: React.FC = () => {
             <div className="text-xl font-extrabold text-white">LPP MEDIA <span className="text-brand-magenta">INFLUENCE</span></div>
           </div>
           <div className="flex justify-center gap-8 mb-6 text-sm text-slate-400 font-medium">
-            <a href="/privacy" className="hover:text-brand-magenta transition-colors">Política de Privacidad</a>
-            <a href="/terms" className="hover:text-brand-magenta transition-colors">Términos y Condiciones</a>
+            <a href="#privacy" className="hover:text-brand-magenta transition-colors">Política de Privacidad</a>
+            <a href="#terms" className="hover:text-brand-magenta transition-colors">Términos y Condiciones</a>
           </div>
           <p className="text-slate-700 text-xs font-bold uppercase tracking-widest">© 2026 LPP Media Influence. Made for ROI.</p>
         </div>
