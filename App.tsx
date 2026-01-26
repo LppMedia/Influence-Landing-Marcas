@@ -32,18 +32,17 @@ const TRUST_BRANDS = [
 ];
 
 const App: React.FC = () => {
-  // Enhanced Router Logic: Supports both Path (url/privacy) and Hash (url/#privacy)
-  // This handles the user visiting the specific URL or clicking the footer links.
+  // Enhanced Router Logic: Priority on HASH routing for compatibility
   const [currentRoute, setCurrentRoute] = useState('home');
 
   useEffect(() => {
     const checkRoute = () => {
-      const path = window.location.pathname;
-      const hash = window.location.hash;
-
-      if (path === '/privacy' || hash === '#privacy') {
+      // Normalizamos el hash eliminando el #
+      const hash = window.location.hash.replace('#', '');
+      
+      if (hash === 'privacy') {
         setCurrentRoute('privacy');
-      } else if (path === '/terms' || hash === '#terms') {
+      } else if (hash === 'terms') {
         setCurrentRoute('terms');
       } else {
         setCurrentRoute('home');
@@ -54,13 +53,8 @@ const App: React.FC = () => {
     checkRoute();
 
     // Listen for changes
-    window.addEventListener('popstate', checkRoute);
     window.addEventListener('hashchange', checkRoute);
-
-    return () => {
-      window.removeEventListener('popstate', checkRoute);
-      window.removeEventListener('hashchange', checkRoute);
-    };
+    return () => window.removeEventListener('hashchange', checkRoute);
   }, []);
 
   if (currentRoute === 'privacy') {
@@ -79,10 +73,8 @@ const App: React.FC = () => {
   const statsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Detectar móvil específicamente para configuración de físicas
     const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
 
-    // 1. Inicializar Lenis Global
     const lenis = new Lenis({
       duration: isMobileDevice ? 0 : 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -297,8 +289,8 @@ const App: React.FC = () => {
             <div className="text-xl font-extrabold text-white">LPP MEDIA <span className="text-brand-magenta">INFLUENCE</span></div>
           </div>
           <div className="flex justify-center gap-8 mb-6 text-sm text-slate-400 font-medium">
-            <a href="/#privacy" className="hover:text-brand-magenta transition-colors">Política de Privacidad</a>
-            <a href="/#terms" className="hover:text-brand-magenta transition-colors">Términos y Condiciones</a>
+            <a href="#privacy" className="hover:text-brand-magenta transition-colors">Política de Privacidad</a>
+            <a href="#terms" className="hover:text-brand-magenta transition-colors">Términos y Condiciones</a>
           </div>
           <p className="text-slate-700 text-xs font-bold uppercase tracking-widest">© 2026 LPP Media Influence. Made for ROI.</p>
         </div>
