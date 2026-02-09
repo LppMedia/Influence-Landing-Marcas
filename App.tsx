@@ -32,17 +32,19 @@ const TRUST_BRANDS = [
 ];
 
 const App: React.FC = () => {
-  // Enhanced Router Logic: Priority on HASH routing for compatibility
+  // Enhanced Router Logic: Priority on PATH routing (Clean URLs)
   const [currentRoute, setCurrentRoute] = useState('home');
 
   useEffect(() => {
     const checkRoute = () => {
-      // Normalizamos el hash eliminando el #
-      const hash = window.location.hash.replace('#', '');
+      // Obtenemos el path actual (ej: /privacy) y el hash por si acaso
+      const path = window.location.pathname;
+      const hash = window.location.hash;
       
-      if (hash === 'privacy') {
+      // Comprobamos si la URL contiene las palabras clave
+      if (path.includes('/privacy') || hash === '#privacy') {
         setCurrentRoute('privacy');
-      } else if (hash === 'terms') {
+      } else if (path.includes('/terms') || hash === '#terms') {
         setCurrentRoute('terms');
       } else {
         setCurrentRoute('home');
@@ -52,9 +54,27 @@ const App: React.FC = () => {
     // Check on load
     checkRoute();
 
-    // Listen for changes
+    // Listen for changes (popstate maneja navegación de historial, hashchange para compatibilidad)
+    window.addEventListener('popstate', checkRoute);
     window.addEventListener('hashchange', checkRoute);
-    return () => window.removeEventListener('hashchange', checkRoute);
+    
+    return () => {
+      window.removeEventListener('popstate', checkRoute);
+      window.removeEventListener('hashchange', checkRoute);
+    };
+  }, []);
+
+  // Script para el formulario de GoHighLevel
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src = "https://link.msgsndr.com/js/form_embed.js";
+    script.async = true;
+    document.body.appendChild(script);
+    return () => {
+      if (document.body.contains(script)) {
+        document.body.removeChild(script);
+      }
+    };
   }, []);
 
   if (currentRoute === 'privacy') {
@@ -273,11 +293,30 @@ const App: React.FC = () => {
       {/* CTA y Footer */}
       <section className="py-24">
         <div className="max-w-4xl mx-auto px-6 text-center">
-          <div className="glass p-12 lg:p-20 rounded-[3rem] border-white/5">
+          <div className="glass p-6 lg:p-12 rounded-[3rem] border-white/5">
             <h2 className="text-4xl lg:text-5xl font-black text-white mb-10">¿Listo para el siguiente nivel?</h2>
-            <a href={BOOKING_URL} target="_blank" rel="noopener noreferrer" className="bg-brand-magenta text-white px-10 py-5 rounded-full font-bold text-xl inline-flex items-center gap-3 hover:scale-105 transition-transform">
-              Hablar con un experto <ArrowRight className="w-6 h-6" />
-            </a>
+            
+            <div className="w-full relative z-10 overflow-hidden">
+               <iframe
+                  src="https://api.leadconnectorhq.com/widget/form/PTPnv8nOhAmUIGswpMZq"
+                  style={{width:'100%',height:'100%',border:'none',borderRadius:'3px', minHeight: '600px'}}
+                  id="inline-PTPnv8nOhAmUIGswpMZq" 
+                  data-layout="{'id':'INLINE'}"
+                  data-trigger-type="alwaysShow"
+                  data-trigger-value=""
+                  data-activation-type="alwaysActivated"
+                  data-activation-value=""
+                  data-deactivation-type="neverDeactivate"
+                  data-deactivation-value=""
+                  data-form-name="Clientes Lpp Media"
+                  data-height="878"
+                  data-layout-iframe-id="inline-PTPnv8nOhAmUIGswpMZq"
+                  data-form-id="PTPnv8nOhAmUIGswpMZq"
+                  title="Clientes Lpp Media"
+              >
+              </iframe>
+            </div>
+
           </div>
         </div>
       </section>
@@ -289,9 +328,9 @@ const App: React.FC = () => {
             <div className="text-xl font-extrabold text-white">LPP MEDIA <span className="text-brand-magenta">INFLUENCE</span></div>
           </div>
           <div className="flex justify-center gap-8 mb-6 text-sm text-slate-400 font-medium">
-            {/* IMPORTANT: Hash routing used to ensure compatibility with GoHighLevel/Static servers */}
-            <a href="#privacy" className="hover:text-brand-magenta transition-colors">Política de Privacidad</a>
-            <a href="#terms" className="hover:text-brand-magenta transition-colors">Términos y Condiciones</a>
+            {/* Updated Links to use clean URLs instead of Hashes */}
+            <a href="/privacy" className="hover:text-brand-magenta transition-colors">Política de Privacidad</a>
+            <a href="/terms" className="hover:text-brand-magenta transition-colors">Términos y Condiciones</a>
           </div>
           <p className="text-slate-700 text-xs font-bold uppercase tracking-widest">© 2026 LPP Media Influence. Made for ROI.</p>
         </div>
