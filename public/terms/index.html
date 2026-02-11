@@ -18,9 +18,7 @@
             --border-color: rgba(255, 255, 255, 0.1);
         }
 
-        * {
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; }
 
         body {
             background-color: var(--bg-color);
@@ -32,7 +30,6 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* Header */
         header {
             position: sticky;
             top: 0;
@@ -63,9 +60,7 @@
             letter-spacing: -0.05em;
         }
 
-        .brand span {
-            color: var(--accent-color);
-        }
+        .brand span { color: var(--accent-color); }
 
         .btn-back {
             display: inline-flex;
@@ -78,14 +73,9 @@
             transition: color 0.2s;
         }
 
-        .btn-back:hover {
-            color: var(--accent-color);
-        }
+        .btn-back:hover { color: var(--accent-color); }
 
-        /* Main Content */
-        main {
-            padding: 4rem 0 6rem 0;
-        }
+        main { padding: 4rem 0 6rem 0; }
 
         h1 {
             font-size: 2.5rem;
@@ -115,9 +105,7 @@
             margin-bottom: 3rem;
         }
 
-        section {
-            margin-bottom: 3rem;
-        }
+        section { margin-bottom: 3rem; }
 
         h3 {
             color: var(--heading-color);
@@ -138,9 +126,7 @@
             border-radius: 2px;
         }
 
-        p {
-            margin-bottom: 1rem;
-        }
+        p { margin-bottom: 1rem; }
 
         ul {
             list-style: none;
@@ -174,13 +160,11 @@
             color: var(--accent-color);
             text-decoration: none;
             font-weight: 600;
+            word-break: break-word;
         }
 
-        .contact-link:hover {
-            text-decoration: underline;
-        }
+        .contact-link:hover { text-decoration: underline; }
 
-        /* Footer */
         footer {
             border-top: 1px solid var(--border-color);
             padding: 2rem 0;
@@ -192,14 +176,9 @@
             letter-spacing: 0.1em;
         }
 
-        /* Mobile Responsive */
         @media (max-width: 640px) {
-            h1 {
-                font-size: 2rem;
-            }
-            .container {
-                padding: 0 1.25rem;
-            }
+            h1 { font-size: 2rem; }
+            .container { padding: 0 1.25rem; }
         }
     </style>
 </head>
@@ -208,9 +187,7 @@
     <header>
         <div class="container nav-wrapper">
             <a href="/" class="brand">LPP MEDIA <span>INFLUENCE</span></a>
-            <a href="/" class="btn-back">
-                ← Volver al Inicio
-            </a>
+            <a href="/" class="btn-back">← Volver al Inicio</a>
         </div>
     </header>
 
@@ -249,11 +226,13 @@
                 <li>Llamadas telefónicas</li>
             </ul>
             <p>Estas comunicaciones estarán siempre relacionadas con los servicios ofrecidos.</p>
+            <p><strong>Frecuencia:</strong> puede variar según la interacción del usuario; normalmente hasta 5 mensajes por semana.</p>
+            <p><strong>Tarifas:</strong> pueden aplicar tarifas de mensajes y datos según el operador móvil del usuario.</p>
         </section>
 
         <section>
             <h3>5. Cancelación de comunicaciones</h3>
-            <p>El usuario puede dejar de recibir mensajes en cualquier momento solicitándolo o respondiendo <strong>STOP</strong> a los SMS.</p>
+            <p>El usuario puede dejar de recibir mensajes en cualquier momento solicitándolo o respondiendo <strong>STOP</strong> a los SMS. Para ayuda puede responder <strong>HELP</strong> o escribir a <a class="contact-link" href="mailto:support@lppmediainfluence.com">support@lppmediainfluence.com</a>.</p>
         </section>
 
         <section>
@@ -261,14 +240,33 @@
             <p>LPP Media Influence no garantiza resultados específicos en campañas de marketing, salvo que se indique expresamente por escrito. No somos responsables por decisiones tomadas por terceros (plataformas, influencers, algoritmos, redes sociales).</p>
         </section>
 
+        <!-- ✅ NUEVO: Carrier disclaimer -->
+        <section>
+            <h3>6.1 Exención de responsabilidad del operador (Carrier Disclaimer)</h3>
+            <p>Los operadores móviles (carriers) no son responsables por mensajes demorados o no entregados. La entrega de mensajes depende del operador, la red, el dispositivo y otras condiciones fuera de nuestro control.</p>
+        </section>
+
         <section>
             <h3>7. Propiedad intelectual</h3>
             <p>Todo el contenido del sitio web, textos, procesos y materiales pertenece a LPP Media Influence y no puede ser utilizado sin autorización.</p>
         </section>
 
+        <!-- ✅ NUEVO: Restricción de edad -->
+        <section>
+            <h3>7.1 Restricción de edad (18+)</h3>
+            <p>Este sitio y nuestros servicios están dirigidos a personas mayores de 18 años. Al utilizar el sitio, el usuario declara que tiene al menos 18 años de edad.</p>
+        </section>
+
         <section>
             <h3>8. Legislación aplicable</h3>
             <p>Estos términos se rigen por las leyes del Estado de Florida, Estados Unidos.</p>
+        </section>
+
+        <!-- ✅ NUEVO: Link a privacy -->
+        <section>
+            <h3>10. Enlace a la Política de Privacidad</h3>
+            <p>Para conocer cómo recopilamos, usamos y protegemos tus datos, consulta nuestra Política de Privacidad:</p>
+            <p><a class="contact-link" href="https://www.lppmediainfluence.com/privacy">https://www.lppmediainfluence.com/privacy</a></p>
         </section>
 
         <section class="contact-box">
